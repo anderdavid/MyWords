@@ -6,7 +6,11 @@ class Words:
         self.wordsNoRepeat=[]
         self.jsonWords=[]
 
-        print(f"path: ${self.path}")
+        print(f"path: {self.path}")
+        self.buildPhrases()
+        self.buildWords()
+        self.buildNoRepeatWords()
+        self.addItemsWords()
 
     def addphrase(self,line):
         if line.isspace():
