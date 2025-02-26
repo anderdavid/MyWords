@@ -5,14 +5,18 @@ def openFile():
     filetypes = (
         ('Text files', '*.srt'),
     )
-    filename = filedialog.askopenfilename(title='Open a file',filetypes=filetypes)
+    filename = filedialog.askopenfilename(title='Open a file .srt',filetypes=filetypes)
     print('Selected:', filename)
     labelFile.config(text=f"path: {filename}")
     words = Words(filename)
-    sorted_by_repeat = words.sortedByRepeat()
-    labelNumWords.config(text=f"Number words {len(sorted_by_repeat)}")
+    listWords = words.getWordsNoRepeatSorted()
 
-    print(sorted_by_repeat)
+    for word in listWords:
+        listbox.insert(tk.END,f" {word}")
+
+    labelNumWords.config(text=f"Number words {len(listWords)}")
+    frame.pack(pady=10,side="top")
+
 
 window = tk.Tk()
 window.title("MY ENGLISH WORDS")
@@ -23,6 +27,18 @@ labelFile = tk.Label(window)
 labelFile.pack(padx=10, pady=5)
 labelNumWords = tk.Label(window)
 labelNumWords.pack(side="top",padx=10, pady=10)
+
+frame = tk.Frame(window,width=400,height=500)
+
+scrollbar = tk.Scrollbar(frame)
+scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+
+listbox = tk.Listbox(frame, yscrollcommand=scrollbar.set,width=30,height=20,font=("Arial",14))
+listbox.pack(side=tk.LEFT,pady=10)
+
+scrollbar.config(command=listbox.yview)
+
+
 window.mainloop()
 
 

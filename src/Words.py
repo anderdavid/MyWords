@@ -56,4 +56,14 @@ class Words:
         sorted_by_repeat = sorted(self.jsonWords, key=lambda x: x["repeat"], reverse=True)
         return sorted_by_repeat
 
+    def getWordsNoRepeatSorted(self):
+        listWords=[]
+        jsonSorted = self.sortedByRepeat()
+
+
+        for item in jsonSorted:
+            listWords.append(item["word"])
+
+        return listWords
+
 
