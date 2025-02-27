@@ -1,22 +1,49 @@
 from src.Words import *
 import tkinter as tk
 from tkinter import filedialog
+
+filename = ""
 def openFile():
+    global  filename
     filetypes = (
         ('Text files', '*.srt'),
     )
     filename = filedialog.askopenfilename(title='Open a file .srt',filetypes=filetypes)
     print('Selected:', filename)
     labelFile.config(text=f"path: {filename}")
-    words = Words(filename)
-    listWords = words.getWordsNoRepeatSorted()
+    buttonWordsOfFile.pack(pady=10, side="top")
+    buttonNewWords.pack(pady=10, side="top")
 
-    for word in listWords:
-        listbox.insert(tk.END,f" {word}")
 
-    labelNumWords.config(text=f"Number words {len(listWords)}")
+def insertListInFrame(list):
+    labelNumWords.config(text=f"Number words {len(list)}")
+    listbox.delete(0, tk.END)
+    for word in list:
+        listbox.insert(tk.END, f" {word}")
+
     frame.pack(pady=10,side="top")
+    buttonCopyClipBoard.pack(pady =10, side="bottom")
 
+def wordsOfFile():
+    words = Words()
+    words.openFile(filename)
+    listWords = words.getWordsNoRepeatSorted()
+    insertListInFrame(listWords)
+
+
+def newWords():
+    print("newWords")
+    totalWords = Words()
+    totalWords.addTotalWords()
+
+    mWords = Words()
+    mWords.openFile(filename)
+
+    newListWords = mWords.buildNewWords(totalWords.wordsNoRepeat,mWords.wordsNoRepeat)
+    insertListInFrame(newListWords)
+
+def copyClipBoard():
+    print("copy clipboard")
 
 window = tk.Tk()
 window.title("MY ENGLISH WORDS")
@@ -28,7 +55,11 @@ labelFile.pack(padx=10, pady=5)
 labelNumWords = tk.Label(window)
 labelNumWords.pack(side="top",padx=10, pady=10)
 
-frame = tk.Frame(window,width=400,height=500)
+buttonWordsOfFile = tk.Button(window,text="Words of File",command=wordsOfFile)
+buttonNewWords = tk.Button(window, text ="new words",command=newWords)
+
+frame = tk.Frame(window,width=400,height=800)
+buttonCopyClipBoard = tk.Button(window, text ="Copy to clipboard")
 
 scrollbar = tk.Scrollbar(frame)
 scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
