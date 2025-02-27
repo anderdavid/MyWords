@@ -1,18 +1,28 @@
-class Words:
-    def __init__(self,ruta):
-        self.path = ruta
-        self.phrases =[]
-        self.words =[]
-        self.wordsNoRepeat=[]
-        self.jsonWords=[]
+import os
 
-        print(f"path: {self.path}")
-        self.buildPhrases()
+class Words:
+    def __init__(self):
+        self.initPath = "./englishFiles"
+        self.paths = []
+        self.phrases = []
+        self.words = []
+        self.jsonWords = []
+        self.totalWords = []
+        self.words = []
+        self.wordsNoRepeat = []
+
+    def setPaths(self):
+        namesOfFile = os.listdir(self.initPath)
+        self.paths.extend(namesOfFile)
+
+    def openFile(self, path):
+        self.buildPhrases(path)
         self.buildWords()
         self.buildNoRepeatWords()
         self.addItemsWords()
 
-    def addphrase(self,line):
+    def addphrase(self, line):
+
         if line.isspace():
             return
         if line.strip().isnumeric():
@@ -21,12 +31,12 @@ class Words:
             return
         self.phrases.append(line)
 
-    def buildPhrases(self):
-        file = open(self.path,"r")
+    def buildPhrases(self, path):
+        file = open(path, "r")
         for line in file:
             self.addphrase(line)
 
-    def addWords(self,phrase):
+    def addWords(self, phrase):
         mList = phrase.split()
         self.words.extend(mList)
 
@@ -34,7 +44,7 @@ class Words:
         for phrase in self.phrases:
             self.addWords(phrase)
 
-    def addWordNoRepeat(self,word):
+    def addWordNoRepeat(self, word):
         count = self.wordsNoRepeat.count(word)
         if count !=0:
             return
@@ -43,6 +53,14 @@ class Words:
     def buildNoRepeatWords(self):
         for mWord in self.words:
             self.addWordNoRepeat(mWord)
+
+
+    def addTotalWords(self):
+        self.setPaths()
+        for path in self.paths:
+            self.buildPhrases(f"{self.initPath}/{path}")
+            self.buildWords()
+            self.buildNoRepeatWords()
 
     def addItemsWords(self):
         for noRepeatWord in self.wordsNoRepeat:
@@ -60,10 +78,19 @@ class Words:
         listWords=[]
         jsonSorted = self.sortedByRepeat()
 
-
         for item in jsonSorted:
             listWords.append(item["word"])
 
         return listWords
 
+
+
+    def buildNewWords(self,listWords,newList):
+        newWords =[]
+        for word in newList:
+            count = listWords.count(word)
+            if count == 0:
+                newWords.append(word)
+
+        return newWords
 
