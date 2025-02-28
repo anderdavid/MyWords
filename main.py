@@ -1,5 +1,6 @@
 from src.Words import *
 import tkinter as tk
+import pyttsx3
 from tkinter import filedialog
 
 filename = ""
@@ -14,7 +15,10 @@ def openFile():
     buttonWordsOfFile.pack(pady=10, side="top")
     buttonNewWords.pack(pady=10, side="top")
 
-
+def speak_word(word):
+    engine = pyttsx3.init()
+    engine.say(word)
+    engine.runAndWait()
 def insertListInFrame(list):
     labelNumWords.config(text=f"Number words {len(list)}")
     listbox.delete(0, tk.END)
@@ -43,7 +47,11 @@ def newWords():
     insertListInFrame(newListWords)
 
 def copyClipBoard():
-    print("copy clipboard")
+    items = listbox.get(0,tk.END)
+    textToCopy = '\n'.join(items)
+    window.clipboard_clear()
+    window.clipboard_append(textToCopy)
+    window.update()
 
 window = tk.Tk()
 window.title("MY ENGLISH WORDS")
@@ -59,13 +67,14 @@ buttonWordsOfFile = tk.Button(window,text="Words of File",command=wordsOfFile)
 buttonNewWords = tk.Button(window, text ="new words",command=newWords)
 
 frame = tk.Frame(window,width=400,height=800)
-buttonCopyClipBoard = tk.Button(window, text ="Copy to clipboard")
+
 
 scrollbar = tk.Scrollbar(frame)
 scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
 listbox = tk.Listbox(frame, yscrollcommand=scrollbar.set,width=30,height=20,font=("Arial",14))
 listbox.pack(side=tk.LEFT,pady=10)
+buttonCopyClipBoard = tk.Button(window, text ="Copy to clipboard",command=copyClipBoard)
 
 scrollbar.config(command=listbox.yview)
 
