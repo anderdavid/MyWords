@@ -1,5 +1,6 @@
 import os
 
+
 class Words:
     def __init__(self):
         self.initPath = "./englishFiles"
