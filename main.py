@@ -12,8 +12,13 @@ def openFile():
     filename = filedialog.askopenfilename(title='Open a file .srt',filetypes=filetypes)
     print('Selected:', filename)
     labelFile.config(text=f"path: {filename}")
-    buttonWordsOfFile.pack(pady=10, side="top")
-    buttonNewWords.pack(pady=10, side="top")
+    labelFile.grid(row=2, column=1, padx=10, pady=10)
+
+
+    frameButtons.grid(row=4, column=1,sticky='w',padx=5, pady=5)
+    buttonLearnedWords.grid(row=1, column=1, padx=5, pady=5)
+    buttonWordsOfFile.grid(row=1, column=2, padx=5, pady=5)
+    buttonNewWords.grid(row=1, column=3, padx=5, pady=5)
 
 def speak_word(word):
     engine = pyttsx3.init()
@@ -25,8 +30,8 @@ def insertListInFrame(list):
     for word in list:
         listbox.insert(tk.END, f" {word}")
 
-    frame.pack(pady=10,side="top")
-    buttonCopyClipBoard.pack(pady =10, side="bottom")
+    frameContainer.grid(row=5,column=1,sticky='w',padx=5,pady=5)
+    buttonCopyClipBoard.grid(row=6,column=1,sticky='w',padx=5,pady=5)
 
 def wordsOfFile():
     words = Words()
@@ -46,6 +51,9 @@ def newWords():
     newListWords = mWords.buildNewWords(totalWords.wordsNoRepeat,mWords.wordsNoRepeat)
     insertListInFrame(newListWords)
 
+def learnedWords():
+    print("Learned words")
+
 def copyClipBoard():
     items = listbox.get(0,tk.END)
     textToCopy = '\n'.join(items)
@@ -55,25 +63,29 @@ def copyClipBoard():
 
 window = tk.Tk()
 window.title("MY ENGLISH WORDS")
-window.geometry("600x700")
-button = tk.Button(window, text="Open File",command=openFile)
-button.pack(side="top",anchor="w",padx=10, pady=5)
+window.geometry("600x700+0+0")
+
+buttonOpen = tk.Button(window, text="Open File",command=openFile)
+buttonOpen = buttonOpen.grid(row=1, column=1,sticky='w', padx=5, pady=5)
+
 labelFile = tk.Label(window)
-labelFile.pack(padx=10, pady=5)
 labelNumWords = tk.Label(window)
-labelNumWords.pack(side="top",padx=10, pady=10)
-
-buttonWordsOfFile = tk.Button(window,text="Words of File",command=wordsOfFile)
-buttonNewWords = tk.Button(window, text ="new words",command=newWords)
-
-frame = tk.Frame(window,width=400,height=800)
+labelNumWords.grid(row=3, column=1,sticky='w', padx=10, pady=10)
 
 
-scrollbar = tk.Scrollbar(frame)
-scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+frameButtons = tk.Frame(window,width=300,height=50)
+buttonLearnedWords = tk.Button(frameButtons, text ="Learned Words",command=learnedWords)
+buttonWordsOfFile = tk.Button(frameButtons,text="Words of File",command=wordsOfFile)
+buttonNewWords = tk.Button(frameButtons, text ="new words",command=newWords)
 
-listbox = tk.Listbox(frame, yscrollcommand=scrollbar.set,width=30,height=20,font=("Arial",14))
-listbox.pack(side=tk.LEFT,pady=10)
+frameContainer = tk.Frame(window,width=400,height=800)
+
+
+scrollbar = tk.Scrollbar(frameContainer)
+scrollbar.grid(row=1,column=1,sticky='w',padx=5, pady=5)
+
+listbox = tk.Listbox(frameContainer, yscrollcommand=scrollbar.set,width=30,height=20,font=("Arial",14))
+listbox.grid(row=1,column=1,sticky='w',pady=10)
 buttonCopyClipBoard = tk.Button(window, text ="Copy to clipboard",command=copyClipBoard)
 
 scrollbar.config(command=listbox.yview)
