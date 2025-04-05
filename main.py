@@ -2,6 +2,8 @@ from src.Words import *
 import tkinter as tk
 import pyttsx3
 from tkinter import filedialog
+import shutil
+from pathlib import Path
 
 filename = ""
 def openFile():
@@ -19,6 +21,15 @@ def openFile():
     buttonLearnedWords.grid(row=1, column=1, padx=5, pady=5)
     buttonWordsOfFile.grid(row=1, column=2, padx=5, pady=5)
     buttonNewWords.grid(row=1, column=3, padx=5, pady=5)
+
+def addFile():
+    filetypes = (
+        ('Text files', '*.srt'),
+    )
+    filename = filedialog.askopenfilename(title='Open a file .srt', filetypes=filetypes)
+    print('Selected:', filename)
+    fileTitle =Path(filename).name
+    shutil.copy(filename, f"./englishFiles/{fileTitle}")
 
 def speak_word(word):
     engine = pyttsx3.init()
@@ -51,8 +62,36 @@ def newWords():
     newListWords = mWords.buildNewWords(totalWords.wordsNoRepeat,mWords.wordsNoRepeat)
     insertListInFrame(newListWords)
 
+def openWindowAllWords():
+    new_window = tk.Toplevel(window)
+    new_window.title("ALL WORDS")
+    new_window.geometry("300x200")
+
+
+
+def removeFile():
+    print("remove File")
+
 def learnedWords():
-    print("Learned words")
+    mWords = Words()
+    paths =mWords.getPaths()
+    var1 = tk.BooleanVar()
+    framePathsContainer = tk.Frame(window)
+    framePathsContainer.grid( row=5, column=1,padx=5,pady=5,sticky='w')
+    for i,path, in enumerate(paths):
+        checkboxItem = tk.Checkbutton(framePathsContainer, text=f"{path}",variable=path,command=lambda: print(f"Checkbox is {var1.get()}"))
+        checkboxItem.grid( row=i,column=1,padx=5,pady=5,sticky='w')
+
+    frameActions = tk.Frame(window,width=300,height=50)
+    frameActions.grid(row=6,column=1,pady=5,padx=5,sticky='w')
+    buttonViewTotalWords = tk.Button(frameActions,text="view all words",command=openWindowAllWords)
+    buttonViewTotalWords.grid(row=1,column=1,pady=5,padx=5,sticky='w')
+    buttonAddFile = tk.Button(frameActions, text="Add File", command=addFile)
+    buttonAddFile.grid(row=1, column=2, pady=5, padx=5, sticky='w')
+    buttonRemoveFiles = tk.Button(frameActions,text="Remove File",command=removeFile)
+    buttonRemoveFiles.grid(row=1,column=3,padx=5,pady=5, sticky='w')
+
+
 
 def copyClipBoard():
     items = listbox.get(0,tk.END)
