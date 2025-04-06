@@ -6,6 +6,7 @@ import shutil
 from pathlib import Path
 
 filename = ""
+learnedFiles =[]
 def openFile():
     global  filename
     filetypes = (
@@ -34,6 +35,19 @@ def addFile():
 def removeFile(name):
     filePath = Path(name)
     filePath.unlink()
+
+def removeFiles():
+    print("remove Files")
+    print(learnedFiles)
+
+    selectedFiles = list(filter(lambda x: x["selected"] == True, learnedFiles))
+    print("selectedFiles",selectedFiles)
+
+    for file in selectedFiles:
+        removeFile(f"./englishFiles/{file['name']}")
+
+    learnedWords()
+
 
 
 def speak_word(word):
@@ -73,21 +87,33 @@ def openWindowAllWords():
     new_window.geometry("300x200")
 
 
+def setSelected(index):
+    def callback():
+        global learnedFiles
+        learnedFiles[index]["selected"] =not learnedFiles[index]["selected"]
 
-def removeFiles():
-    print("remove Files")
-    name = "3 reason  you don't get girls.srt"
-    removeFile(f"./englishFiles/{name}")
-    learnedWords()
+    return callback
 
 def learnedWords():
+    global learnedFiles
+    learnedFiles =[]
     mWords = Words()
     paths =mWords.getPaths()
-    var1 = tk.BooleanVar()
+    print(f"paths ",paths)
+
+
+    for i,path in enumerate(paths):
+        learnedFiles.append({"name":path,"selected":False})
+
+
     framePathsContainer = tk.Frame(window)
     framePathsContainer.grid( row=5, column=1,padx=5,pady=5,sticky='w')
-    for i,path, in enumerate(paths):
-        checkboxItem = tk.Checkbutton(framePathsContainer, text=f"{path}",variable=path,command=lambda: print(f"Checkbox is {var1.get()}"))
+
+
+
+    for i,file, in enumerate(learnedFiles):
+        var = tk.IntVar()
+        checkboxItem = tk.Checkbutton(framePathsContainer, text=f"{file['name']}",variable=var,command=setSelected(i))
         checkboxItem.grid( row=i,column=1,padx=5,pady=5,sticky='w')
 
     frameActions = tk.Frame(window,width=300,height=50)
