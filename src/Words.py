@@ -16,6 +16,10 @@ class Words:
         namesOfFile = os.listdir(self.initPath)
         self.paths.extend(namesOfFile)
 
+    def getPaths(self):
+        self.setPaths()
+        return self.paths
+
     def openFile(self, path):
         self.buildPhrases(path)
         self.buildWords()
