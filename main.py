@@ -96,6 +96,7 @@ def setSelected(index):
 
 def learnedWords():
     global learnedFiles
+    global framePathsContainer
     learnedFiles =[]
     mWords = Words()
     paths =mWords.getPaths()
@@ -105,7 +106,7 @@ def learnedWords():
     for i,path in enumerate(paths):
         learnedFiles.append({"name":path,"selected":False})
 
-
+    framePathsContainer.destroy()
     framePathsContainer = tk.Frame(window)
     framePathsContainer.grid( row=5, column=1,padx=5,pady=5,sticky='w')
 
@@ -140,6 +141,8 @@ window.geometry("600x700+0+0")
 
 frameTopButtons = tk.Frame(window,width=300,height=50)
 frameTopButtons.grid(row=1, column=1, sticky='w', padx=5, pady=5)
+
+framePathsContainer = tk.Frame(window)
 
 buttonOpen = tk.Button(frameTopButtons, text="Open File",command=openFile)
 buttonOpen.grid(row=1, column=1,sticky='w', padx=5, pady=5)
