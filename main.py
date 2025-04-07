@@ -38,6 +38,7 @@ class Ui:
         buttonNewWords.grid(row=1, column=2, padx=5, pady=5)
 
     def newWords(self):
+        self.frameListContent = tk.Frame(self.frameTabContent)
         totalWords = Words()
         totalWords.addTotalWords()
         mWords = Words()
@@ -49,6 +50,7 @@ class Ui:
         listWords.insertListInFrame(newListWords)
 
     def wordsOfFile(self):
+        self.frameListContent = tk.Frame(self.frameTabContent)
         words = Words()
         words.openFile(self.filename)
         list = words.getWordsNoRepeatSorted()
