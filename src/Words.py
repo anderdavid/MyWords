@@ -62,12 +62,12 @@ class Words:
 
     def addTotalWords(self):
         self.setPaths()
-
+        print(f"paths {self.paths}")
         for path in self.paths:
             self.buildPhrases(f"{self.initPath}/{path}")
             self.buildWords()
             self.buildNoRepeatWords()
-
+        print(f"words {self.wordsNoRepeat}")
 
     def addItemsWords(self):
         for noRepeatWord in self.wordsNoRepeat:

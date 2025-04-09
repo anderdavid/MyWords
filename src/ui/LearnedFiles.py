@@ -1,31 +1,34 @@
 import tkinter as tk
 from src.Words import *
+from src.ui.ListWords import *
 import shutil
 from pathlib import Path
 from tkinter import filedialog
 
 class LearnedFiles:
-    def __init__(self,container):
-        self.learnedFiles =[]
-        self.paths = Words().getPaths()
-        self.container = container
-        self.framePathsContainer = tk.Frame(container)
-
-        print(f"paths",self.paths)
-
     def setSelected(self,index):
         def callback():
             self.learnedFiles[index]["selected"] =not self.learnedFiles[index]["selected"]
 
         return callback
 
-    def openWindowAllWords(self):
-        print("openWindowAllWords")
 
     def openWindowAllWords(self):
         new_window = tk.Toplevel(self.container)
-        new_window.title("ALL WORDS")
-        new_window.geometry("300x200")
+        new_window.title("MY LEARNED ENGLISH WORDS")
+        new_window.geometry("600x700+700+0")
+
+        learnedWords = Words()
+        learnedWords.addTotalWords()
+
+        label = tk.Label(new_window, text=f"Number words {len(learnedWords.wordsNoRepeat)}")
+        label.grid(row=1, column=1,sticky='w', padx=5, pady=5)
+
+        frameListLearnedWords = tk.Frame(new_window)
+        frameListLearnedWords.grid(row=1, column=1, sticky='w', padx=5,pady=5)
+
+        list = ListWords(container=frameListLearnedWords)
+        list.insertListInFrame(list= learnedWords.wordsNoRepeat)
 
     def addFile(self):
         filetypes = (
@@ -41,6 +44,14 @@ class LearnedFiles:
         print(f"rname {name}")
         filePath = Path(name)
         filePath.unlink()
+
+    def __init__(self,container):
+        self.learnedFiles =[]
+        self.paths = Words().getPaths()
+        self.container = container
+        self.framePathsContainer = tk.Frame(container)
+
+        print(f"paths",self.paths)
 
     def removeFiles(self):
         selectedFiles = list(filter(lambda x: x["selected"] == True, self.learnedFiles))
