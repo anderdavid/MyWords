@@ -17,6 +17,7 @@ class ListWords:
 
     def insertListInFrame(self,list):
         self.listbox.delete(0, tk.END)
+        self.listbox.bind('<<ListboxSelect>>', self.on_select)
         for word in list:
             self.listbox.insert(tk.END, f" {word}")
         self.container.grid(row=4, column=1, sticky='w', padx=5, pady=5)
@@ -28,7 +29,16 @@ class ListWords:
             self.container.clipboard_append(textToCopy)
             self.container.update()
 
-    def speak_word(word):
+    def speak_word(self,word):
+        print(f"word {word}")
         engine = pyttsx3.init()
         engine.say(word)
         engine.runAndWait()
+
+    def on_select(self,event):
+        selection = event.widget.curselection()
+        if selection:
+            index = selection[0]
+            data = event.widget.get(index)
+            print(f"You clicked on: {data}")
+            self.speak_word(word=data)
